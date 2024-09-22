@@ -43,4 +43,31 @@ Follow the steps to build the pipeline.
 * If you're pushing the Docker image to Docker Hub, go to Manage Jenkins > Manage Credentials.
 * Add Username with password credentials and give it an ID (docker-hub-credentials-id), which you reference in the Jenkinsfile under DOCKER_HUB_CREDENTIALS.
 
-5. **Build the Pipeline**
+5. **Sonarqube token:**
+- Go to public_ip:9000/account/security.
+- Change public_ip with the public IP of the instance.
+- Next, click on Generate new token [ save the token with name as jenkins for easy reference] -> Copy the token and save it somewhere.
+- in Jenkins, add new credentials with id "sonarqube-cred" as "secret text"
+
+6. **Configure Maven in Jenkins**
+- Navigate to Jenkins > Manage Jenkins > Global Tool Configuration.
+  Scroll to the Maven Section:
+
+- If Maven is not listed, click Add Maven.
+- Enter a name for your Maven installation (e.g., Maven 3.8.6).
+- Optionally, select Install Automatically if you want Jenkins to install it on agents when needed. Otherwise, specify the installation path.
+  Save the Configuration.
+
+7.**Configure Email Settings**
+
+- Click on “Manage Jenkins” and then “Configure System”.
+- Scroll down to the “Extended E-mail Notification” section and click on “Advanced”.
+- Enter the SMTP server address for your email provider in the “SMTP server” field.
+- in case of gmail : "smtp.gmail.com"
+- Enter the port number for your SMTP server in the “SMTP port” field.
+- port for Gmail SMTP : 587
+- Choose the appropriate encryption method for your email provider in the “Use SSL” or “Use TLS” field.
+- you need to create App password in Gmail
+
+
+8.**Build the Pipeline**
