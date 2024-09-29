@@ -1,0 +1,43 @@
+---
+- name: Deploy Jenkins on AWS
+  hosts: jenkins
+  become: yes
+
+  tasks:
+    - name: Copy install_jenkins.sh script to remote host
+      copy:
+        src: ./install_jenkins.sh
+        dest: /tmp/install_jenkins.sh
+        mode: '0755'
+
+    - name: Execute install_jenkins.sh
+      command: /tmp/install_jenkins.sh
+      register: jenkins_install
+      ignore_errors: yes
+
+    - name: Print Jenkins installation output
+      debug:
+        var: jenkins_install.stdout_lines
+
+    - name: Start and enable Jenkins
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
+    - name: Copy install_docker.sh script to remote host
+      copy:
+        src: ./install_docker.sh
+        dest: /tmp/install_docker.sh
+        mode: '0755'
+
+    - name: Execute install_docker.sh
+      command: /tmp/install_docker.sh
+
+    - name: Copy install_trivy.sh script to remote host
+      copy:
+        src: ./install_trivy.sh
+        dest: /tmp/install_trivy.sh
+        mode: '0755'
+
+    - name: Execute install_trivy.sh
+      command: /tmp/install_trivy.sh

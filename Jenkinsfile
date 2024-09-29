@@ -6,7 +6,6 @@ pipeline {
         DOCKER_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
-        EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com'
     }
     tools {
         maven 'Maven 3.8.6' // The name you specified in Global Tool Configuration
@@ -80,6 +79,32 @@ pipeline {
         always {
             // Clean workspace after build
             cleanWs()
+//             script {
+//                 def jobName = env.JOB_NAME
+//                 def buildNumber = env.BUILD_NUMBER
+//                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
+//                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
+//                 def email_recipients = 'fahmy1.diab@gmail.com'
+//                 def body = """
+//                             <html>
+//                                 <body>
+//                                   <div style="border: 4px solid ${bannerColor}; padding:10px;">
+//                                     <h2>${jobName} - Build ${buildNumber}</h2>
+//                                         <div style="background-color:${bannerColor}; padding:10px;>
+//                                             <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+//                                         </div>
+//                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+//                                   </div>
+//                                 </body>
+//                             </html>
+//                             """
+//                 emailext(
+//                     subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
+//                     body: body,
+//                     to: email_recipients, from : 'fahmy1.diab@gmail.com', replyTo: 'fahmy1.diab@gmail.com',
+//                     mimType: 'text/html', attachmentsPattern: 'trivy-image-report.html'
+//                 )
+//             }
         }
 
         success {
