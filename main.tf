@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-north-1"
+  region  = "us-east-1"  # West Virginia region
   profile = "devops_profile"
 }
 # Define the key pair resource
@@ -78,43 +78,47 @@ resource "aws_security_group" "my_sg" {
 }
 
 resource "aws_instance" "jenkins" {
-  ami = "ami-04cdc91e49cb06165"  # Ubuntu AMI ID for your region
-  instance_type = "t3.micro"
+  ami = "ami-0e86e20dae9224db8"  # Ubuntu AMI ID for your region
+  instance_type = "t3.medium"
   key_name = "my-key-pair"  # Replace with your key pair name
   tags = {
     Name = "jenkins"
   }
 
   security_groups = [aws_security_group.my_sg.name]
+  spot_price = "0.045"  # Replace with your desired max spot price
 }
 resource "aws_instance" "sonarqube" {
-  ami = "ami-04cdc91e49cb06165"  # Ubuntu AMI ID for your region
-  instance_type = "t3.micro"
+  ami = "ami-0e86e20dae9224db8"  # Ubuntu AMI ID for your region
+  instance_type = "t3.medium"
   key_name = "my-key-pair"  # Replace with your key pair name
   tags = {
     Name = "sonarqube"
   }
 
   security_groups = [aws_security_group.my_sg.name]
+  spot_price = "0.045"  # Replace with your desired max spot price
 }
 resource "aws_instance" "nexus" {
-  ami = "ami-04cdc91e49cb06165"  # Ubuntu AMI ID for your region
-  instance_type = "t3.micro"
+  ami = "ami-0e86e20dae9224db8"  # Ubuntu AMI ID for your region
+  instance_type = "t3.medium"
   key_name = "my-key-pair"  # Replace with your key pair name
   tags = {
     Name = "nexus"
   }
 
   security_groups = [aws_security_group.my_sg.name]
+  spot_price = "0.045"  # Replace with your desired max spot price
 }
 resource "aws_instance" "k8s" {
-  ami = "ami-04cdc91e49cb06165"  # Ubuntu AMI ID for your region
-  instance_type = "t3.micro"
+  ami = "ami-0e86e20dae9224db8"  # Ubuntu AMI ID for your region
+  instance_type = "t3.medium"
   key_name = "my-key-pair"  # Replace with your key pair name
   tags = {
     Name = "k8s"
   }
 
   security_groups = [aws_security_group.my_sg.name]
+  spot_price = "0.045"  # Replace with your desired max spot price
 }
 
