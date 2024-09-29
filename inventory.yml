@@ -8,15 +8,10 @@ all:
     sonarqube:
       hosts:
         sonarqube_node:
-          ansible_host: 13.61.15.8
+          ansible_host: ec2-15-236-175-182.eu-west-3.compute.amazonaws.com
           ansible_user: ubuntu
     nexus:
       hosts:
         nexus_node:
-          ansible_host: 16.171.20.37
-          ansible_user: ubuntu
-    k8s:
-      hosts:
-        k8s_node:
-          ansible_host: 13.53.112.99
+          ansible_host: ec2-15-236-175-182.eu-west-3.compute.amazonaws.com
           ansible_user: ubuntu
