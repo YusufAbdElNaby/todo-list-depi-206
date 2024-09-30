@@ -8,6 +8,7 @@
 
 ### To install sonarqube using Ansible:
 -   ansible-playbook -i inventory.yml sonarqube_setup.yaml --private-key=/Users/diabf/Downloads/Jenkins-t.pem
+![img_2.png](img_2.png)
 
 ### Jenkins Configuration
 [Jenkins-Documentation](JENKINS-README.md)
