@@ -6,7 +6,6 @@ pipeline {
         DOCKER_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
-        EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com'
     }
     tools {
         jdk 'jdk17'
@@ -34,8 +33,10 @@ pipeline {
         stage('SonarQube Analsyis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=todo-list-depi -Dsonar.projectKey=todo-list-depi \
-                    -Dsonar.java.binaries=. '''
+                    sh ''' mvn sonar:sonar \
+                             -Dsonar.projectKey=todo-list-depi \
+                             -Dsonar.host.url=http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:9000 \
+                    '''
                 }
             }
         }
@@ -57,7 +58,7 @@ pipeline {
         }
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image --format table -o trivy-image-report.html devops-project/todo-list-depi:latest "
+                sh "trivy image --format table -o trivy-image-report.html ${DOCKER_IMAGE}:${DOCKER_TAG} "
             }
         }
         stage('Docker Login') {
@@ -101,13 +102,13 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
-                def email_recipients = 'fahmy1.diab@gmail.com'
+                def email_recipients = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com'
                 def body = """
                             <html>
                                 <body>
                                   <div style="border: 4px solid ${bannerColor}; padding:10px;">
                                     <h2>${jobName} - Build ${buildNumber}</h2>
-                                        <div style="background-color:${bannerColor}; padding:10px;>
+                                        <div style="background-color:${bannerColor}; padding:10px;">
                                             <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
                                         </div>
                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
