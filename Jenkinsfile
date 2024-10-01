@@ -9,7 +9,8 @@ pipeline {
         EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com'
     }
     tools {
-        maven 'Maven 3.8.6' // The name you specified in Global Tool Configuration
+        jdk 'jdk17'
+        maven 'maven3' // The name you specified in Global Tool Configuration
     }
     stages {
         stage('Checkout') {
@@ -25,16 +26,27 @@ pipeline {
               sh 'mvn clean package'
             }
         }
-        stage('Static Code Analysis') {
-           environment {
-             SONAR_URL = "http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:9000/"
-           }
-           steps {
-             withCredentials([string(credentialsId: 'sonarqube-cred', variable: 'SONAR_AUTH_TOKEN')]) {
-                sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-             }
-           }
+        stage('File System Scan') {
+            steps {
+                sh "trivy fs --format table -o trivy-fs-report.html ."
+            }
         }
+        stage('SonarQube Analsyis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=todo-list-depi -Dsonar.projectKey=todo-list-depi \
+                    -Dsonar.java.binaries=. '''
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image using the Dockerfile
@@ -43,7 +55,11 @@ pipeline {
                 }
             }
         }
-
+        stage('Docker Image Scan') {
+            steps {
+                sh "trivy image --format table -o trivy-image-report.html devops-project/todo-list-depi:latest "
+            }
+        }
         stage('Docker Login') {
             steps {
                 // Log in to Docker Hub (optional, if you're pushing the image)
@@ -80,46 +96,32 @@ pipeline {
         always {
             // Clean workspace after build
             cleanWs()
-//             script {
-//                 def jobName = env.JOB_NAME
-//                 def buildNumber = env.BUILD_NUMBER
-//                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
-//                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
-//                 def email_recipients = 'fahmy1.diab@gmail.com'
-//                 def body = """
-//                             <html>
-//                                 <body>
-//                                   <div style="border: 4px solid ${bannerColor}; padding:10px;">
-//                                     <h2>${jobName} - Build ${buildNumber}</h2>
-//                                         <div style="background-color:${bannerColor}; padding:10px;>
-//                                             <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
-//                                         </div>
-//                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
-//                                   </div>
-//                                 </body>
-//                             </html>
-//                             """
-//                 emailext(
-//                     subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
-//                     body: body,
-//                     to: email_recipients, from : 'fahmy1.diab@gmail.com', replyTo: 'fahmy1.diab@gmail.com',
-//                     mimType: 'text/html', attachmentsPattern: 'trivy-image-report.html'
-//                 )
-//             }
-        }
-
-        success {
-                    mail bcc: '', body: "Build completed successfully. View it here: ${env.BUILD_URL}",
-                         cc: '', from: '', replyTo: '', subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                         to: "${EMAIL_RECIPIENTS}"
-                    echo 'Build completed successfully!'
-        }
-
-        failure {
-                    mail bcc: '', body: "Build failed. View it here: ${env.BUILD_URL}",
-                         cc: '', from: '', replyTo: '', subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                         to: "${EMAIL_RECIPIENTS}"
-                    echo 'Build failed!'
+            script {
+                def jobName = env.JOB_NAME
+                def buildNumber = env.BUILD_NUMBER
+                def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
+                def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
+                def email_recipients = 'fahmy1.diab@gmail.com'
+                def body = """
+                            <html>
+                                <body>
+                                  <div style="border: 4px solid ${bannerColor}; padding:10px;">
+                                    <h2>${jobName} - Build ${buildNumber}</h2>
+                                        <div style="background-color:${bannerColor}; padding:10px;>
+                                            <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+                                        </div>
+                                    <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                                  </div>
+                                </body>
+                            </html>
+                            """
+                emailext(
+                    subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
+                    body: body,
+                    to: email_recipients, from : 'fahmy1.diab@gmail.com', replyTo: 'fahmy1.diab@gmail.com',
+                    mimType: 'text/html', attachmentsPattern: 'trivy-image-report.html'
+                )
+            }
         }
     }
 }
