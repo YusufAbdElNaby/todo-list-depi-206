@@ -69,5 +69,17 @@ Follow the steps to build the pipeline.
 - Choose the appropriate encryption method for your email provider in the “Use SSL” or “Use TLS” field.
 - you need to create App password in Gmail
 
+8.**Configure Sonar With Jenkins**
 
-8.**Build the Pipeline**
+- Click on “Manage Jenkins” and then “Plugins”.
+- Install 
+  * “Sonar Quality Gates Plugin“
+  * “SonarQube Scanner for Jenkins“ 
+
+
+9.**Add Jenkins web hook in Sonar**
+
+- Go to the project Click on “Project Settings” and then “Webhooks”.
+- Click on “Create“ then set name and  URl set to ”http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:8080/sonarqube-webhook/”
+
+10.**Build the Pipeline**
