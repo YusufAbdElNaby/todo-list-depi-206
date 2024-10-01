@@ -6,6 +6,7 @@ pipeline {
         DOCKER_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
+        EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com'
     }
     tools {
         maven 'Maven 3.8.6' // The name you specified in Global Tool Configuration
@@ -26,7 +27,7 @@ pipeline {
         }
         stage('Static Code Analysis') {
            environment {
-             SONAR_URL = "http://172.17.0.3:9000"
+             SONAR_URL = "http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:9000/"
            }
            steps {
              withCredentials([string(credentialsId: 'sonarqube-cred', variable: 'SONAR_AUTH_TOKEN')]) {
