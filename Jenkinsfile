@@ -43,13 +43,25 @@ pipeline {
                 }
             }
         }
+//         stage('Quality Gate') {
+//             steps {
+//                 script {
+//                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+//                 }
+//             }
+//         }
         stage('Quality Gate') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                    steps {
+                        timeout(time: 30, unit: 'SECONDS') {
+                            script {
+                                def qualityGate = waitForQualityGate()
+                                if (qualityGate.status != 'OK') {
+                                    error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
