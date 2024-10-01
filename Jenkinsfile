@@ -33,10 +33,13 @@ pipeline {
         stage('SonarQube Analsyis') {
             steps {
                 withSonarQubeEnv('sonar') {
+                  withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh ''' mvn sonar:sonar \
                              -Dsonar.projectKey=todo-list-depi \
                              -Dsonar.host.url=http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:9000 \
+                             -Dsonar.login=$SONAR_TOKEN
                     '''
+                  }
                 }
             }
         }
