@@ -11,4 +11,4 @@
 ![img_2.png](img_2.png)
 
 ### Jenkins Configuration
-[Jenkins-Documentation](JENKINS-README.md)
+[Jenkins-Documentation](JENKINS-README.MD)
