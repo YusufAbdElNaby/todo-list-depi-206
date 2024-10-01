@@ -105,7 +105,7 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
-                def email_recipients = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com'
+                def email_recipients = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com,yousefosama3@gmail.com,baraa.almodrek@hotmail.com,tahagamil@gmail.com'
                 def body = """
                             <html>
                                 <body>
