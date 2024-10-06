@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-list-app-ingress
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing  # Expose externally
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-list-app-service
+                port:
+                  number: 80
