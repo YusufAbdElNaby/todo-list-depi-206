@@ -15,12 +15,12 @@ pipeline {
         maven 'maven3' // The name you specified in Global Tool Configuration
     }
     stages {
-        stage('Checkout') {
-            steps {
-                // Clone the GitHub repository
-                git branch: 'main', url: "${GITHUB_REPO}"
-            }
-        }
+//         stage('Checkout') {
+//             steps {
+//                 // Clone the GitHub repository
+//                 git branch: 'develop', url: "${GITHUB_REPO}"
+//             }
+//         }
         stage('Build and Test') {
             steps {
                sh 'ls -ltr'
