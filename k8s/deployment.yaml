@@ -17,3 +17,16 @@ spec:
           image: fahmy1diab/todo-list-app:latest
           ports:
             - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-list-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: todo-list-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
