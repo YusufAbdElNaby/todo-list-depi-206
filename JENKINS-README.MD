@@ -83,6 +83,7 @@ Follow the steps to build the pipeline.
 - Click on “Create“ then set name and  URl set to ”http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:8080/sonarqube-webhook/”
 
 10.**Configure kubectl in jenkins**
+- install kubectl
 - sudo -i -u jenkins
 - sudo chmod +x kubectl
 
