@@ -108,7 +108,8 @@ pipeline {
                         withCredentials([file(credentialsId: "${KUBECONFIG_CREDENTIALS}", variable: 'KUBECONFIG')]) {
                             script {
                                 // Use kubectl to apply the Kubernetes YAML configuration
-                                 sh 'kubectl get pods'
+                                 sh 'export PATH=$PATH:/usr/local/bin && kubectl get pods'
+//                                  sh 'kubectl get pods'
                                 // sh 'kubectl apply -f k8s/deployment.yaml'
                             }
                         }
