@@ -7,6 +7,8 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
         EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com,yousefosama3@gmail.com,baraa.almodrek@hotmail.com,tahagamil@gmail.com,abdotarek359@gmail.com'
+        KUBECONFIG_CREDENTIALS = 'eks-kubeconfig'  // Jenkins credentials ID for kubeconfig
+        AWS_DEFAULT_REGION = 'eu-west-3'
     }
     tools {
         jdk 'jdk17'
@@ -100,6 +102,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to EKS') {
+                    steps {
+                        withCredentials([file(credentialsId: "${KUBECONFIG_CREDENTIALS}", variable: 'KUBECONFIG')]) {
+                            script {
+                                // Use kubectl to apply the Kubernetes YAML configuration
+                                 sh 'kubectl get pods'
+                                // sh 'kubectl apply -f k8s/deployment.yaml'
+                            }
+                        }
+                    }
+                }
 
         stage('Cleanup') {
             steps {
