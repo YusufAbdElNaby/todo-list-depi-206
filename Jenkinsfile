@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'todo-list-app'
-        DOCKER_TAG = 'latest'
+        DOCKER_TAG = 'latest1'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
         EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com,yousefosama3@gmail.com,baraa.almodrek@hotmail.com,tahagamil@gmail.com,abdotarek359@gmail.com'
