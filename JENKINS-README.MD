@@ -72,7 +72,7 @@ Follow the steps to build the pipeline.
 8.**Configure Sonar With Jenkins**
 
 - Click on “Manage Jenkins” and then “Plugins”.
-- Install 
+- Install: 
   * “Sonar Quality Gates Plugin“
   * “SonarQube Scanner for Jenkins“ 
 
@@ -82,4 +82,9 @@ Follow the steps to build the pipeline.
 - Go to the project Click on “Project Settings” and then “Webhooks”.
 - Click on “Create“ then set name and  URl set to ”http://ec2-15-236-175-182.eu-west-3.compute.amazonaws.com:8080/sonarqube-webhook/”
 
-10.**Build the Pipeline**
+10.**Configure kubectl in jenkins**
+- sudo -i -u jenkins
+- sudo chmod +x kubectl
+
+
+11.**Build the Pipeline**
