@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-list-app
-          image: fahmy1diab/todo-list-app:latest1
+          image: fahmy1diab/todo-list-app:latest11
           ports:
             - containerPort: 8080
 ---
