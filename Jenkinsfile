@@ -110,7 +110,9 @@ pipeline {
                                 // Use kubectl to apply the Kubernetes YAML configuration
 //                                  sh 'export PATH=$PATH:/usr/local/bin && kubectl get pods'
 //                                  sh 'kubectl get pods'
-                                sh 'kubectl apply -f k8s/deployment.yaml'
+                                sh 'pwd'
+                                sh 'ls'
+                                sh 'kubectl apply -f deployment.yaml'
                             }
                         }
                     }
