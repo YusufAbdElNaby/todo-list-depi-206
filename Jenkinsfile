@@ -112,7 +112,7 @@ pipeline {
 //                                  sh 'kubectl get pods'
                                 sh 'pwd'
                                 sh 'ls'
-                                sh 'kubectl apply -f deployment.yaml'
+                                sh 'kubectl apply -f deployment.yaml --force'
                             }
                         }
                     }
