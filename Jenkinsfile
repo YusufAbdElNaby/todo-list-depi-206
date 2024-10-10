@@ -6,14 +6,62 @@ pipeline {
         DOCKER_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
+        EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com,yousefosama3@gmail.com,baraa.almodrek@hotmail.com,tahagamil@gmail.com,abdotarek359@gmail.com'
     }
-
+    tools {
+        jdk 'jdk17'
+        maven 'maven3' // The name you specified in Global Tool Configuration
+    }
     stages {
         stage('Checkout') {
             steps {
                 // Clone the GitHub repository
                 git branch: 'main', url: "${GITHUB_REPO}"
             }
+        }
+        stage('Build and Test') {
+            steps {
+               sh 'ls -ltr'
+              // build the project and create a JAR file
+              sh 'mvn clean package'
+            }
+        }
+        stage('File System Scan') {
+            steps {
+                sh "trivy fs --format table -o trivy-fs-report.html ."
+            }
+        }
+        stage('SonarQube Analsyis') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                  withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    sh ''' mvn sonar:sonar \
+                             -Dsonar.projectKey=todo-list-depi \
+                             -Dsonar.host.url=http://localhost:9000 \
+                             -Dsonar.login=$SONAR_TOKEN
+                    '''
+                  }
+                }
+            }
+        }
+//         stage('Quality Gate') {
+//             steps {
+//                 script {
+//                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+//                 }
+//             }
+//         }
+        stage('Quality Gate') {
+                    steps {
+                        timeout(time: 180, unit: 'SECONDS') {
+                            script {
+                                def qualityGate = waitForQualityGate()
+                                if (qualityGate.status != 'OK') {
+                                    error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+                                }
+                            }
+                        }
+                    }
         }
 
         stage('Build Docker Image') {
@@ -24,7 +72,11 @@ pipeline {
                 }
             }
         }
-
+        stage('Docker Image Scan') {
+            steps {
+                sh "trivy image --format table -o trivy-image-report.html ${DOCKER_IMAGE}:${DOCKER_TAG} "
+            }
+        }
         stage('Docker Login') {
             steps {
                 // Log in to Docker Hub (optional, if you're pushing the image)
@@ -62,13 +114,18 @@ pipeline {
             // Clean workspace after build
             cleanWs()
         }
+         success {
+                            mail bcc: '', body: "Build completed successfully. View it here: ${env.BUILD_URL}",
+                                 cc: '', from: '', replyTo: '', subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                                 to: "${EMAIL_RECIPIENTS}"
+                            echo 'Build completed successfully!'
+                }
 
-        success {
-            echo 'Build completed successfully!'
-        }
-
-        failure {
-            echo 'Build failed!'
-        }
+                failure {
+                            mail bcc: '', body: "Build failed. View it here: ${env.BUILD_URL}",
+                                 cc: '', from: '', replyTo: '', subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                                 to: "${EMAIL_RECIPIENTS}"
+                            echo 'Build failed!'
+                }
     }
 }

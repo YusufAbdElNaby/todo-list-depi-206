@@ -1,0 +1,17 @@
+all:
+  children:
+    jenkins:
+      hosts:
+        jenkins_node:
+          ansible_host: ec2-15-236-175-182.eu-west-3.compute.amazonaws.com
+          ansible_user: ubuntu
+    sonarqube:
+      hosts:
+        sonarqube_node:
+          ansible_host: ec2-15-236-175-182.eu-west-3.compute.amazonaws.com
+          ansible_user: ubuntu
+    nexus:
+      hosts:
+        nexus_node:
+          ansible_host: ec2-15-236-175-182.eu-west-3.compute.amazonaws.com
+          ansible_user: ubuntu

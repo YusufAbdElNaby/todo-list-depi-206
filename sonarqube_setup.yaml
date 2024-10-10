@@ -1,0 +1,29 @@
+---
+- name: Deploy Sonarqube as a Docker container
+  hosts: sonarqube
+  become: yes
+
+  tasks:
+    - name: Copy install_docker.sh script to remote host
+      copy:
+        src: ./install_docker.sh
+        dest: /tmp/install_docker.sh
+        mode: '0755'
+
+    - name: Execute install_docker.sh to install Docker
+      command: /tmp/install_docker.sh
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Run Sonarqube container
+      community.docker.docker_container:
+        name: sonarqube
+        image:  sonarqube:8.9.1-community
+        state: started
+        restart_policy: always
+        published_ports:
+          - "9000:9000"  # Host:Container port mapping
