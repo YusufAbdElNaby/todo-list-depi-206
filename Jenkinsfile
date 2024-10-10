@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'todo-list-app'
-        DOCKER_TAG = 'latest11'
+//         DOCKER_TAG = 'latest1'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'  // Jenkins credentials ID for Docker Hub
         GITHUB_REPO = 'https://github.com/YusufAbdElNaby/todo-list-depi-206.git'  //  GitHub repo
         EMAIL_RECIPIENTS = 'fahmy1.diab@gmail.com,yusuf.abdelnabi@gmail.com,yousefosama3@gmail.com,baraa.almodrek@hotmail.com,tahagamil@gmail.com,abdotarek359@gmail.com'
@@ -65,7 +65,16 @@ pipeline {
                         }
                     }
         }
-
+        stage('Generate Docker Tag') {
+                    steps {
+                        script {
+                            // Generate a dynamic Docker tag using a timestamp and build number
+                            def timestamp = new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone('UTC'))
+                            env.DOCKER_TAG = "build-${BUILD_NUMBER}-${timestamp}"
+                            echo "Generated Docker tag: ${DOCKER_TAG}"
+                        }
+                    }
+        }
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image using the Dockerfile
@@ -102,7 +111,17 @@ pipeline {
                 }
             }
         }
-
+        stage('Update Deployment Image Tag') {
+            steps {
+                script {
+                    // Replace the image tag in the deployment.yaml file
+                    sh """
+                        sed -i 's|image: fahmy1diab/todo-list-app:.*|image: fahmy1diab/todo-list-app:${DOCKER_TAG}|g' deployment.yaml
+                        cat deployment.yaml  // Optional: View the updated deployment.yaml file for verification
+                    """
+                }
+            }
+        }
         stage('Deploy to EKS') {
                     steps {
                         withCredentials([file(credentialsId: "${KUBECONFIG_CREDENTIALS}", variable: 'KUBECONFIG')]) {
