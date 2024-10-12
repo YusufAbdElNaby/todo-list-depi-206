@@ -117,7 +117,7 @@ pipeline {
                     // Replace the image tag in the deployment.yaml file
                     sh """
                         sed -i 's|image: fahmy1diab/todo-list-app:.*|image: fahmy1diab/todo-list-app:${DOCKER_TAG}|g' deployment.yaml
-                        cat deployment.yaml  // Optional: View the updated deployment.yaml file for verification
+                        cat deployment.yaml
                     """
                 }
             }
