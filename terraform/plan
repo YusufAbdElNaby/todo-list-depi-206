@@ -1,0 +1,77 @@
+VPC settings
+Resources to create
+Info
+Create the VPC and other networking resources.
+VPC and more
+Name tag auto-generation
+Info
+Enter a value for the Name tag. This value will be used to auto-generate Name tags for all resources in the VPC.
+Auto-generate:
+DEPI-206
+IPv4 CIDR block
+Info
+Determine the starting IP and the size of your VPC using CIDR notation.
+10.30.0.0/21
+
+
+No IPv6 CIDR block
+
+Tenancy
+Info
+
+Default
+
+Number of Availability Zones (AZs)
+Info
+Choose the number of AZs in which to provision subnets. We recommend at least two AZs for high availability.
+2
+
+Customize AZs
+First availability zone
+eu-west-3a
+
+Second availability zone
+eu-west-3b
+
+Number of public subnets
+Info
+The number of public subnets to add to your VPC. Use public subnets for web applications that need to be publicly accessible over the internet.
+
+2
+
+Number of private subnets
+Info
+The number of private subnets to add to your VPC. Use private subnets to secure backend resources that don't need public access.
+
+2
+
+Customize subnets CIDR blocks
+Public subnet CIDR block in eu-west-3a
+10.30.0.0/24
+256 IPs
+Public subnet CIDR block in eu-west-3b
+10.30.1.0/24
+256 IPs
+Private subnet CIDR block in eu-west-3a
+10.30.2.0/24
+256 IPs
+Private subnet CIDR block in eu-west-3b
+10.30.3.0/24
+256 IPs
+
+NAT gateways ($)
+Info
+Choose the number of Availability Zones (AZs) in which to create NAT gateways. Note that there is a charge for each NAT gateway
+
+1 per AZ
+
+VPC endpoints
+Info
+Endpoints can help reduce NAT gateway charges and improve security by accessing S3 directly from the VPC. By default, full access policy is used. You can customize this policy at any time.
+
+S3 Gateway
+
+DNS options
+
+Enable DNS hostnames
+Enable DNS resolution
