@@ -86,4 +86,12 @@ Follow the steps to build the pipeline.
 - on Jenkins instance run this:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl; chmod +x ./kubectl; mv ./kubectl/usr/local/bin/kubectl
 
-11.**Build the Pipeline**
+11. **Add Credentials (for kubeconfig)**
+
+* Go to Manage Jenkins > Manage Credentials.
+* Select Secret file as a kind
+* Set eks-kubeconfig to the ID
+* upload the file
+
+
+12.**Build the Pipeline**
