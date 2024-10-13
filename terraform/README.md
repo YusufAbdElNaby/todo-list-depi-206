@@ -74,12 +74,12 @@ You will be prompted to confirm the changes. Type `yes` to proceed.
 #### **5. Security Groups**
 
 - **Jenkins EC2 Security Group:**
-    - SSH: Port 22 open to all IP addresses.
-    - Jenkins UI: Port 8080 open to all IP addresses.
-    - SonarQube UI: Port 9000 open to all IP addresses.
+  - SSH: Port 22 open to all IP addresses.
+  - Jenkins UI: Port 8080 open to all IP addresses.
+  - SonarQube UI: Port 9000 open to all IP addresses.
 
 - **Bastion Host Security Group:**
-    - SSH: Port 22 open to all IP addresses.
+  - SSH: Port 22 open to all IP addresses.
 
 #### **6. Outputs**
 
