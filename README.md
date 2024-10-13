@@ -12,3 +12,5 @@
 
 ### Jenkins Configuration
 [Jenkins-Documentation](JENKINS-README.MD)
+
+[Terraform-Documentation](terraform%2FREADME.md)
